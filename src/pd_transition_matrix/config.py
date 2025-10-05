@@ -13,10 +13,9 @@ OUTPUTS_DIR = BASE_DIR / "outputs"
 class PipelineConfig:
     """Container for pipeline paths and settings."""
 
-    raw_data_path: Path = DATA_DIR / "raw_data.csv"
-    feature_store_path: Path = OUTPUTS_DIR / "packages" / "feature_store.parquet"
-    model_path: Path = OUTPUTS_DIR / "packages" / "pd_model.pkl"
-    report_path: Path = OUTPUTS_DIR / "reports" / "model_report.json"
+    raw_data_path: Path = DATA_DIR / "raw_transition_data.csv"
+    feature_store_path: Path = OUTPUTS_DIR / "packages" / "transition_features.csv"
+    pd_table_path: Path = OUTPUTS_DIR / "reports" / "segment_pd_table.csv"
 
 
 pipeline_config = PipelineConfig()

@@ -32,6 +32,14 @@ def save_artifact(data: Any, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
 
     if isinstance(data, pd.DataFrame):
-        data.to_parquet(path, index=False)
+        if path.suffix == ".csv":
+            data.to_csv(path, index=False)
+        elif path.suffix == ".parquet":
+            data.to_parquet(path, index=False)
+        else:
+            raise ValueError(
+                "Unsupported file extension for DataFrame persistence. "
+                "Use .csv or .parquet."
+            )
     else:
         raise ValueError("Unsupported artifact type. Provide a Pandas DataFrame.")

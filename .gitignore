@@ -32,8 +32,9 @@ outputs/*
 # Inputs/Data optional keepers
 inputs/
 !inputs/.gitkeep
-data/
+data/*
 !data/.gitkeep
+!data/raw_transition_data.csv
 
 # IDEs
 .vscode/

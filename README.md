@@ -1,6 +1,6 @@
 # PD Transition Matrix Model Service
 
-This project scaffolds a Probability of Default (PD) modeling service that leverages the transition matrix methodology. The repository provides a production-ready structure for managing data, engineering features, training models, and orchestrating end-to-end pipelines.
+This project scaffolds a Probability of Default (PD) modeling service that leverages the transition matrix methodology. The repository provides a production-ready structure for managing data, engineering features, computing transition matrices, and orchestrating end-to-end pipelines.
 
 ## Project Structure
 
@@ -28,11 +28,12 @@ final_template_project/
 
 The pipeline orchestrates the following stages:
 
-1. Load and validate raw data assets.
-2. Engineer features required for transition matrix computation.
-3. Train and evaluate PD models based on transition probabilities.
-4. Persist artifacts and reports inside the `outputs/` directory hierarchy.
+1. Load and validate raw transition data stored in `data/raw_transition_data.csv`.
+2. Aggregate exposures by segment, risk bucket, and term structure for transition-matrix analysis.
+3. Derive Probability of Default (PD) term structures for each segment and originating risk bucket.
+4. Persist intermediate features in `outputs/packages/transition_features.csv` and final PD tables in `outputs/reports/segment_pd_table.csv`.
+5. Display the PD table in the console for rapid inspection.
 
-## Next Steps
+## Sample Data
 
-Populate the data management, feature engineering, and modeling modules with domain-specific logic to implement the transition matrix workflow for PD modeling.
+The repository ships with a synthetic dataset containing exposure transitions across three segments (`Retail`, `SME`, and `Corporate`). You can replace `data/raw_transition_data.csv` with institution-specific extracts that follow the same schema to run the analytics on your own portfolio.

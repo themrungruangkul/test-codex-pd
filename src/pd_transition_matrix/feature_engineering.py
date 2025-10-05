@@ -1,21 +1,43 @@
 """Feature engineering helpers for transition matrix modeling."""
 
-from typing import Tuple
+from typing import Iterable
 
 import pandas as pd
 
 
-def build_transition_features(raw_data: pd.DataFrame) -> Tuple[pd.DataFrame, pd.Series]:
-    """Transform raw records into model-ready features and targets.
+EXPECTED_COLUMNS: Iterable[str] = (
+    "segment",
+    "risk_bucket_start",
+    "risk_bucket_end",
+    "term_months",
+    "exposure",
+)
 
-    This placeholder implementation simply returns the input frame and a dummy
-    target column to demonstrate the interface expected by the pipeline.
+
+def build_transition_features(raw_data: pd.DataFrame) -> pd.DataFrame:
+    """Aggregate raw transition observations into exposure summaries.
+
+    The transition matrix method requires the number of accounts or exposure
+    amount that moved from one risk bucket to another over a time horizon. This
+    function validates the input structure and aggregates exposures by segment,
+    originating risk bucket, destination bucket, and term structure.
     """
 
-    features = raw_data.copy()
-    if "target" in raw_data.columns:
-        target = raw_data["target"]
-    else:
-        target = pd.Series(dtype="float64", name="target")
+    missing_columns = [column for column in EXPECTED_COLUMNS if column not in raw_data.columns]
+    if missing_columns:
+        missing = ", ".join(missing_columns)
+        raise ValueError(f"Raw data is missing required columns: {missing}.")
 
-    return features, target
+    aggregated = (
+        raw_data.groupby(list(EXPECTED_COLUMNS[:-1]), dropna=False)["exposure"]
+        .sum()
+        .reset_index()
+    )
+
+    # Ensure deterministic ordering for downstream reporting
+    aggregated.sort_values(
+        by=["segment", "risk_bucket_start", "term_months", "risk_bucket_end"],
+        inplace=True,
+    )
+
+    return aggregated

@@ -1,32 +1,86 @@
-"""Model training utilities for PD transition matrix models."""
+"""Transition matrix analytics for PD estimation."""
 
-from typing import Dict, Tuple
+from typing import Iterable
 
 import pandas as pd
-from sklearn.dummy import DummyClassifier
-from sklearn.metrics import classification_report
-from sklearn.model_selection import train_test_split
 
 
-DefaulterReport = Dict[str, Dict[str, float]]
+def calculate_segment_pd(
+    transitions: pd.DataFrame,
+    default_bucket: str = "Default",
+    segment_column: str = "segment",
+    start_bucket_column: str = "risk_bucket_start",
+    end_bucket_column: str = "risk_bucket_end",
+    term_column: str = "term_months",
+    exposure_column: str = "exposure",
+) -> pd.DataFrame:
+    """Compute PD term structures from transition exposures.
 
+    Parameters
+    ----------
+    transitions:
+        Aggregated exposures produced by :func:`build_transition_features`.
+    default_bucket:
+        Label that represents the default state in the transition matrix.
+    segment_column, start_bucket_column, end_bucket_column, term_column, exposure_column:
+        Column names that can be overridden to support different schemas.
 
-def train_transition_model(features: pd.DataFrame, target: pd.Series) -> Tuple[DummyClassifier, DefaulterReport]:
-    """Train a baseline model for PD estimation.
-
-    A dummy classifier is used as a placeholder until a transition matrix
-    implementation is provided.
+    Returns
+    -------
+    pd.DataFrame
+        Table with columns ``segment``, ``risk_bucket``, ``term_structure``, and ``PD``.
     """
 
-    if target.empty:
-        raise ValueError("Target series is empty. Provide labeled training data.")
+    required_columns: Iterable[str] = (
+        segment_column,
+        start_bucket_column,
+        end_bucket_column,
+        term_column,
+        exposure_column,
+    )
 
-    X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
+    missing_columns = [column for column in required_columns if column not in transitions.columns]
+    if missing_columns:
+        missing = ", ".join(missing_columns)
+        raise ValueError(f"Transitions data is missing required columns: {missing}.")
 
-    model = DummyClassifier(strategy="most_frequent")
-    model.fit(X_train, y_train)
+    grouping_keys = [segment_column, start_bucket_column, term_column]
 
-    predictions = model.predict(X_test)
-    report = classification_report(y_test, predictions, output_dict=True)
+    totals = (
+        transitions.groupby(grouping_keys, dropna=False)[exposure_column]
+        .sum()
+        .reset_index()
+        .rename(columns={exposure_column: "total_exposure"})
+    )
 
-    return model, report
+    defaults = (
+        transitions[transitions[end_bucket_column] == default_bucket]
+        .groupby(grouping_keys, dropna=False)[exposure_column]
+        .sum()
+        .reset_index()
+        .rename(columns={exposure_column: "default_exposure"})
+    )
+
+    pd_table = totals.merge(defaults, on=grouping_keys, how="left").fillna({"default_exposure": 0.0})
+
+    pd_table["PD"] = pd_table["default_exposure"] / pd_table["total_exposure"]
+    pd_table["term_structure"] = pd_table[term_column].astype(str) + "M"
+
+    final_columns = [
+        segment_column,
+        start_bucket_column,
+        "term_structure",
+        "PD",
+    ]
+
+    final = pd_table[final_columns].rename(
+        columns={
+            segment_column: "segment",
+            start_bucket_column: "risk_bucket",
+        }
+    )
+
+    final.sort_values(by=["segment", "risk_bucket", "term_structure"], inplace=True)
+    final.reset_index(drop=True, inplace=True)
+
+    return final
