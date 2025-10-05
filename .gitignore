@@ -1,0 +1,43 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.eggs/
+*.egg
+
+# Environments
+.env
+.venv
+venv/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Outputs
+outputs/
+!outputs/deliverables/
+!outputs/packages/
+!outputs/reports/
+outputs/*
+!outputs/deliverables/.gitkeep
+!outputs/packages/.gitkeep
+!outputs/packages/transition_features.csv
+!outputs/reports/.gitkeep
+!outputs/reports/segment_pd_table.csv
+
+# Inputs/Data optional keepers
+inputs/
+!inputs/.gitkeep
+data/*
+!data/.gitkeep
+!data/raw_transition_data.csv
+
+# IDEs
+.vscode/
+.idea/
