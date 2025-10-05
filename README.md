@@ -43,6 +43,10 @@ You can replace `data/raw_transition_data.csv` with institution-specific extract
 
 The output PD table contains the columns `segment`, `risk_bucket`, `term_structure`, and `PD`, making it simple to plug into downstream reporting layers. The latest run is also persisted to `outputs/reports/segment_pd_table.csv` so that analysts can pick up the result without rerunning the pipeline.
 
+## Model Development Narrative
+
+For a step-by-step description of the methodology—including data preparation, transition feature construction, PD estimation, validation checks, and extension guidance—see [`docs/model_development.md`](docs/model_development.md).
+
 ## Getting Started
 
 1. **Create a virtual environment**
