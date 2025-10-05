@@ -9,12 +9,54 @@ from src.pd_transition_matrix.modeling import calculate_segment_pd
 def _sample_transitions() -> pd.DataFrame:
     return pd.DataFrame(
         [
-            {"segment": "Retail", "risk_bucket_start": "A", "risk_bucket_end": "Default", "term_months": 12, "exposure": 2},
-            {"segment": "Retail", "risk_bucket_start": "A", "risk_bucket_end": "B", "term_months": 12, "exposure": 8},
-            {"segment": "Retail", "risk_bucket_start": "B", "risk_bucket_end": "Default", "term_months": 12, "exposure": 1},
-            {"segment": "Retail", "risk_bucket_start": "B", "risk_bucket_end": "C", "term_months": 12, "exposure": 9},
-            {"segment": "SME", "risk_bucket_start": "BB", "risk_bucket_end": "Default", "term_months": 6, "exposure": 3},
-            {"segment": "SME", "risk_bucket_start": "BB", "risk_bucket_end": "BBB", "term_months": 6, "exposure": 7},
+            {
+                "period_end": "2023-12-31",
+                "segment": "Retail",
+                "risk_bucket_start": "A",
+                "risk_bucket_end": "Default",
+                "term_months": 12,
+                "exposure": 2,
+            },
+            {
+                "period_end": "2023-12-31",
+                "segment": "Retail",
+                "risk_bucket_start": "A",
+                "risk_bucket_end": "B",
+                "term_months": 12,
+                "exposure": 8,
+            },
+            {
+                "period_end": "2024-06-30",
+                "segment": "Retail",
+                "risk_bucket_start": "B",
+                "risk_bucket_end": "Default",
+                "term_months": 12,
+                "exposure": 1,
+            },
+            {
+                "period_end": "2024-06-30",
+                "segment": "Retail",
+                "risk_bucket_start": "B",
+                "risk_bucket_end": "C",
+                "term_months": 12,
+                "exposure": 9,
+            },
+            {
+                "period_end": "2024-06-30",
+                "segment": "SME",
+                "risk_bucket_start": "BB",
+                "risk_bucket_end": "Default",
+                "term_months": 6,
+                "exposure": 3,
+            },
+            {
+                "period_end": "2024-06-30",
+                "segment": "SME",
+                "risk_bucket_start": "BB",
+                "risk_bucket_end": "BBB",
+                "term_months": 6,
+                "exposure": 7,
+            },
         ]
     )
 

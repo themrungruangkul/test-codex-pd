@@ -24,6 +24,7 @@ The transition matrix workflow expects the following columns in the raw dataset:
 
 | Column | Description |
 | --- | --- |
+| `period_end` | Reporting snapshot date for the observed transitions (YYYY-MM-DD). |
 | `segment` | Portfolio slice (e.g. `Retail`, `SME`). Drives dynamic reporting. |
 | `risk_bucket_start` | Origination risk state at the beginning of the observation window. |
 | `risk_bucket_end` | Risk state after the observation window. `Default` denotes credit events. |
@@ -36,11 +37,11 @@ You can replace `data/raw_transition_data.csv` with institution-specific extract
 
 1. **Configuration** – `src/pd_transition_matrix/config.py` centralises file paths through the `PipelineConfig` dataclass. Tests patch this configuration to keep execution isolated.
 2. **Data Management** – `data_management.load_raw_data` enforces the data contract and safeguards against missing files. `save_artifact` persists tabular outputs to CSV or Parquet.
-3. **Feature Engineering** – `feature_engineering.build_transition_features` aggregates exposures by segment, start/end risk buckets, and term horizon to form the transition matrix.
+3. **Feature Engineering** – `feature_engineering.build_transition_features` aggregates exposures by period, segment, start/end risk buckets, and term horizon to form the transition matrix.
 4. **Modeling** – `modeling.calculate_segment_pd` derives PD term structures per segment by comparing total exposure versus default exposure for each state and tenor.
 5. **Orchestration** – `pipeline.run_pipeline` strings the steps together, saves intermediate/final artifacts to `outputs/`, and prints the PD table for quick inspection.
 
-The output PD table contains the columns `segment`, `risk_bucket`, `term_structure`, and `PD`, making it simple to plug into downstream reporting layers.
+The output PD table contains the columns `segment`, `risk_bucket`, `term_structure`, and `PD`, making it simple to plug into downstream reporting layers. The latest run is also persisted to `outputs/reports/segment_pd_table.csv` so that analysts can pick up the result without rerunning the pipeline.
 
 ## Getting Started
 

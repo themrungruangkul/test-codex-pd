@@ -14,8 +14,22 @@ def test_run_pipeline_produces_outputs(tmp_path, monkeypatch, capsys) -> None:
     raw_path = tmp_path / "raw.csv"
     pd.DataFrame(
         [
-            {"segment": "Corporate", "risk_bucket_start": "A", "risk_bucket_end": "Default", "term_months": 12, "exposure": 4},
-            {"segment": "Corporate", "risk_bucket_start": "A", "risk_bucket_end": "AA", "term_months": 12, "exposure": 6},
+            {
+                "period_end": "2024-06-30",
+                "segment": "Corporate",
+                "risk_bucket_start": "A",
+                "risk_bucket_end": "Default",
+                "term_months": 12,
+                "exposure": 4,
+            },
+            {
+                "period_end": "2024-06-30",
+                "segment": "Corporate",
+                "risk_bucket_start": "A",
+                "risk_bucket_end": "AA",
+                "term_months": 12,
+                "exposure": 6,
+            },
         ]
     ).to_csv(raw_path, index=False)
 

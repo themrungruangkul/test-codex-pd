@@ -27,7 +27,9 @@ outputs/
 outputs/*
 !outputs/deliverables/.gitkeep
 !outputs/packages/.gitkeep
+!outputs/packages/transition_features.csv
 !outputs/reports/.gitkeep
+!outputs/reports/segment_pd_table.csv
 
 # Inputs/Data optional keepers
 inputs/

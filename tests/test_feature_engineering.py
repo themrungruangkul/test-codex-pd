@@ -11,16 +11,45 @@ def test_build_transition_features_aggregates_exposure() -> None:
 
     raw = pd.DataFrame(
         [
-            {"segment": "Retail", "risk_bucket_start": "A", "risk_bucket_end": "B", "term_months": 12, "exposure": 10},
-            {"segment": "Retail", "risk_bucket_start": "A", "risk_bucket_end": "B", "term_months": 12, "exposure": 5},
-            {"segment": "Retail", "risk_bucket_start": "A", "risk_bucket_end": "C", "term_months": 12, "exposure": 8},
-            {"segment": "SME", "risk_bucket_start": "BB", "risk_bucket_end": "Default", "term_months": 6, "exposure": 2},
+            {
+                "period_end": "2024-06-30",
+                "segment": "Retail",
+                "risk_bucket_start": "A",
+                "risk_bucket_end": "B",
+                "term_months": 12,
+                "exposure": 10,
+            },
+            {
+                "period_end": "2024-06-30",
+                "segment": "Retail",
+                "risk_bucket_start": "A",
+                "risk_bucket_end": "B",
+                "term_months": 12,
+                "exposure": 5,
+            },
+            {
+                "period_end": "2024-06-30",
+                "segment": "Retail",
+                "risk_bucket_start": "A",
+                "risk_bucket_end": "C",
+                "term_months": 12,
+                "exposure": 8,
+            },
+            {
+                "period_end": "2023-12-31",
+                "segment": "SME",
+                "risk_bucket_start": "BB",
+                "risk_bucket_end": "Default",
+                "term_months": 6,
+                "exposure": 2,
+            },
         ]
     )
 
     features = build_transition_features(raw)
 
     assert list(features.columns) == [
+        "period_end",
         "segment",
         "risk_bucket_start",
         "risk_bucket_end",
@@ -37,7 +66,7 @@ def test_build_transition_features_validates_schema() -> None:
 
     raw = pd.DataFrame(
         [
-            {"segment": "Retail", "risk_bucket_start": "A", "term_months": 12, "exposure": 10},
+            {"period_end": "2024-06-30", "segment": "Retail", "risk_bucket_start": "A", "term_months": 12, "exposure": 10},
         ]
     )
 

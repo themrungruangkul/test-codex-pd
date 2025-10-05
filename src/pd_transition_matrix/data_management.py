@@ -23,7 +23,12 @@ def load_raw_data(path: Path) -> pd.DataFrame:
     if not path.exists():
         raise FileNotFoundError(f"Raw data file not found at {path}.")
 
-    return pd.read_csv(path)
+    df = pd.read_csv(path)
+
+    if "period_end" in df.columns:
+        df["period_end"] = pd.to_datetime(df["period_end"], errors="coerce")
+
+    return df
 
 
 def save_artifact(data: Any, path: Path) -> None:

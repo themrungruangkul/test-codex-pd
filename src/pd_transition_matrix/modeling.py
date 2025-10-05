@@ -19,7 +19,9 @@ def calculate_segment_pd(
     Parameters
     ----------
     transitions:
-        Aggregated exposures produced by :func:`build_transition_features`.
+        Aggregated exposures produced by :func:`build_transition_features`. Additional
+        columns (e.g. reporting dates) are preserved but ignored in the PD
+        calculation.
     default_bucket:
         Label that represents the default state in the transition matrix.
     segment_column, start_bucket_column, end_bucket_column, term_column, exposure_column:

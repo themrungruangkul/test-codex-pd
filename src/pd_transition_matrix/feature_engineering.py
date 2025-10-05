@@ -6,6 +6,7 @@ import pandas as pd
 
 
 EXPECTED_COLUMNS: Iterable[str] = (
+    "period_end",
     "segment",
     "risk_bucket_start",
     "risk_bucket_end",
@@ -36,7 +37,7 @@ def build_transition_features(raw_data: pd.DataFrame) -> pd.DataFrame:
 
     # Ensure deterministic ordering for downstream reporting
     aggregated.sort_values(
-        by=["segment", "risk_bucket_start", "term_months", "risk_bucket_end"],
+        by=["segment", "risk_bucket_start", "term_months", "risk_bucket_end", "period_end"],
         inplace=True,
     )
 
